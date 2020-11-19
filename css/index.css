@@ -172,7 +172,7 @@ video#vidFondo {
     padding: 0;
 }
 
-#divResultadosBusqueda {
+#divResultadosBusqueda, #divResultadosMios {
     width: 100%;
     padding: 0;
 }

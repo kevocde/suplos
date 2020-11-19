@@ -72,6 +72,19 @@ final class Utilities
     }
 
     /**
+     * Realiza la consulta de los bienes almacenados en la base de datos que son mios
+     * 
+     * @return array
+     */
+    public static function getAllPropertiesToMe()
+    {
+        $mysqli = static::getConnection();
+        $result = $mysqli->query("SELECT DISTINCT(bienes.Id), bienes.* FROM bienes INNER JOIN bienes_seleccionados ON bienes.Id = bienes_seleccionados.Id_bien ORDER BY bienes.Id;");
+
+        return $result->num_rows ? static::getAssocData($result) : [];
+    }
+
+    /**
      * Realiza una consulta de todas las ciudades disponibles para realizar el filtro
      * 
      * @return array
@@ -95,5 +108,31 @@ final class Utilities
         $result = $mysqli->query("SELECT DISTINCT Tipo FROM bienes");
 
         return $result->num_rows ? static::getAssocData($result) : [];
+    }
+
+    /**
+     * Añade la pripiedad a mis bienes
+     */
+    public static function addProperty($idProperty)
+    {
+        $mysqli = Utilities::getConnection();
+        $query = sprintf(
+            "INSERT INTO bienes_seleccionados(Id_bien) VALUES (%s);",
+            $idProperty
+        );
+        $mysqli->query($query);
+    }
+
+    /**
+     * Elimina la pripiedad a mis bienes
+     */
+    public static function removeProperty($idProperty)
+    {
+        $mysqli = Utilities::getConnection();
+        $query = sprintf(
+            "DELETE FROM bienes_seleccionados WHERE Id_bien = %s;",
+            $idProperty
+        );
+        $mysqli->query($query);
     }
 }

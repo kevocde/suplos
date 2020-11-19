@@ -4,14 +4,26 @@ final class HomeController
 {
     public static function listProperties($request)
     {
-        $city = isset($_REQUEST['city']) ? $_REQUEST['city'] : null;
-        $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : null;
+        $city = isset($request['city']) ? $request['city'] : null;
+        $type = isset($request['type']) ? $request['type'] : null;
 
         $properties = array_map(function ($item) {
             return array_merge($item, [
                 'Precio' => '$ ' . number_format($item['Precio'], 0)
             ]);
         }, Utilities::getAllProperties($city, $type));
+        
+        return Utilities::json($properties);
+    }
+
+    public static function listPropertiesToMe($request)
+    {
+
+        $properties = array_map(function ($item) {
+            return array_merge($item, [
+                'Precio' => '$ ' . number_format($item['Precio'], 0)
+            ]);
+        }, Utilities::getAllPropertiesToMe());
         
         return Utilities::json($properties);
     }
@@ -37,7 +49,6 @@ final class HomeController
                 trim($property['Tipo']),
                 str_replace(['$', ',', ' '], '', $property['Precio'])
             );
-            print_r($query);
             $mysqli->query($query);
         }
     }
@@ -60,5 +71,35 @@ final class HomeController
     public static function listTypes($request)
     {
         return Utilities::json(Utilities::getTypes());
+    }
+
+    /**
+     * Añade uno de los bienes a los míos
+     * 
+     * @return string
+     */
+    public static function addToMe($request)
+    {
+        $propertyId = isset($request['property']) ? $request['property'] : null;
+        if ($propertyId) {
+            Utilities::addProperty($propertyId);
+        }
+
+        return Utilities::json([]);
+    }
+
+    /**
+     * Remueve uno de los bienes a los míos
+     * 
+     * @return string
+     */
+    public static function removeToMe($request)
+    {
+        $propertyId = isset($request['property']) ? $request['property'] : null;
+        if ($propertyId) {
+            Utilities::removeProperty($propertyId);
+        }
+
+        return Utilities::json([]);
     }
 }
