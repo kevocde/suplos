@@ -4,11 +4,14 @@ final class HomeController
 {
     public static function listProperties($request)
     {
+        $city = isset($_REQUEST['city']) ? $_REQUEST['city'] : null;
+        $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : null;
+
         $properties = array_map(function ($item) {
             return array_merge($item, [
                 'Precio' => '$ ' . number_format($item['Precio'], 0)
             ]);
-        }, Utilities::getAllProperties());
+        }, Utilities::getAllProperties($city, $type));
         
         return Utilities::json($properties);
     }

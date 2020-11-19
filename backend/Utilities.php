@@ -58,10 +58,15 @@ final class Utilities
      * 
      * @return array
      */
-    public static function getAllProperties()
+    public static function getAllProperties($city = null, $type = null)
     {
+        $queryWhere = "WHERE 1=1";
+        
+        if ($city) $queryWhere .= sprintf(" AND Ciudad='%s'", $city);
+        if ($type) $queryWhere .= sprintf(" AND Tipo='%s'", $type);
+
         $mysqli = static::getConnection();
-        $result = $mysqli->query("SELECT * FROM bienes ORDER BY Id;");
+        $result = $mysqli->query("SELECT * FROM bienes ".  $queryWhere  ." ORDER BY Id;");
 
         return $result->num_rows ? static::getAssocData($result) : [];
     }

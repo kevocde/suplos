@@ -6,6 +6,8 @@ $(document).ready(function() {
     getAllProperties()
     fillCities()
     fillTypes()
+
+    loadEvents()
 });
 
 /*
@@ -62,8 +64,12 @@ function playVideoOnScroll() {
         }, 10)
 }
 
-function getAllProperties() {
-    fetch('/backend?a=properties')
+function getAllProperties(city = null, type = null) {
+    let params = ['a=properties']
+    if (city) params.push('city=' + city)
+    if (type) params.push('type=' + type)
+
+    fetch('/backend?' + params.join('&'))
         .then(res => res.json())
         .then(properties => {
             const container = document.querySelector('#divResultadosBusqueda ul')
@@ -114,4 +120,20 @@ function fillTypes() {
                 select.innerHTML += `<option value="${city.Tipo}">${city.Tipo}</option>`
             }
         })
+}
+
+function searchProperties(evt) {
+    evt.preventDefault()
+    
+    const cityElement = document.getElementById('selectCiudad')
+    const typeElement = document.getElementById('selectTipo')
+    
+    getAllProperties(
+        (cityElement.value.length ? cityElement.value : null),
+        (typeElement.value.length ? typeElement.value : null)
+    )
+}
+
+function loadEvents() {
+    $('#formulario').on('submit', searchProperties)
 }
