@@ -37,7 +37,7 @@ final class Utilities
      * Realiza la conexión a la base de datos
      */
     public static function getConnection() {
-        $mysqli = new mysqli('127.0.0.1', 'root', 'secret', 'intelcost_bienes');
+        $mysqli = new mysqli('us-cdbr-east-02.cleardb.com', 'b53c2758ed7b2d', 'ed638a88', 'heroku_a133d8557df7b00');
         if ($mysqli->connect_errno) {
             die('Error al intentar conectar a la base de datos: ' . $mysqli->connect_error);
         }
